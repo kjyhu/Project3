@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="initialize();">
+    <p>Round <span id = "round#"></span></p>
+    <div class="player">
+        <div><u>Player Log</u></div>
+        <div><u>Player Stat's</u>
+        <p>Original Strength: <span id = "originalPlayerStrength"></span></p> 
+        <p>Original Cunning: <span id = "originalPlayerCunning"></span></p> 
+        <p>Original Speed: <span id = "originalPlayerSpeed"></span></p> 
+        <p>Original Fatigue: <span id = "originalPlayerFatigue"></span></p> 
+        </div>
+    </div>
+    <div class="computer">
+        <div><u>Computer Log</u></div>
+        <div><u>Computer Stat's</u>
+            <p>Original Strength: <span id = "originalComputerStrength"></span></p> 
+            <p>Original Cunning: <span id = "originalComputerCunning"></span></p> 
+            <p>Original Speed: <span id = "originalComputerSpeed"></span></p> 
+            <p>Original Fatigue: <span id = "originalComputerFatigue"></span></p> 
+        </div>
+    </div>
+    <div class="controls">
+        <button onclick="attack(Player1);">Attack</button>
+        <button onclick="defend(Player1)">Defend</button>
+        <button onclick="finishingMove(Player1)">Attempt finishing move</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

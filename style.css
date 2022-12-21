@@ -1,0 +1,36 @@
+.computer > div{
+    margin-left: 50%;
+    border: solid black;
+    height: 250px;
+    width: 200px;
+    float: right;
+    background-color: white;
+}
+.player > div{
+    margin-right: 50%;
+    border:solid black;
+    height: 250px;
+    width: 200px;
+    float: left;
+    background-color: white;
+}
+.player {
+    width: 50%;
+    float: left;
+    margin-top: 10%;
+}
+.computer{
+    margin-top: 10%;
+    width: 50%;
+    float: right;
+}
+.controls{
+    width: 50%;
+    align-content: center;
+}
+body{
+    background-color: rgb(54, 171, 218);
+}
+div~p{
+    text-align: center;
+}
