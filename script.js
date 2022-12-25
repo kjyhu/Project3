@@ -5,7 +5,8 @@ const Player = {
     fatigue: 30,
     attackValue: 0,
     defendValue: 0,
-    win: false,
+    finishingMove: false,
+    attemptFinishMove: false,
 
     addStrength(num) {
         this.strength += num;
@@ -42,10 +43,11 @@ const Player = {
         return this.speed
     },
     getFatigue() {
+        this.fatigue = parseInt(this.fatigue * 100) / 100
         return this.fatigue
     },
-    changeWin() {
-        this.win = true;
+    setFinishingMove(boolean) {
+        this.finishingMove = boolean;
     },
     getWin() {
         return this.win;
@@ -57,18 +59,27 @@ const Player = {
         this.defendValue = num;
     },
     getAttackValue() {
-        return this.attackValue;
+        return this.attackValue
     },
     getDefendValue() {
         return this.defendValue
+    },
+    getFinishMove() {
+        return this.finishingMove;
+    },
+    changeAttemptFinishMove(boolean) {
+        this.attemptFinishMove = boolean
+    },
+    getAttemptFinishMove() {
+        return this.attemptFinishMove
     }
 };
 const Player1 = Object.create(Player);
 const computer = Object.create(Player);
 var number = 0;
-var selected = [];
 playerEvents = document.getElementById("playerLog");
 computerEvents = document.getElementById("computerLog");
+var attemptFinishMove = false;
 function initialize() {
     ogPSpeed = document.getElementById("originalPlayerSpeed");
     ogPCunning = document.getElementById("originalPlayerCunning");
@@ -88,6 +99,8 @@ function initialize() {
     currentCFatigue = document.getElementById("currentComputerFatigue");
     round = document.getElementById("round#");
     document.getElementById("finishingMove").style.visibility = "hidden";
+    document.getElementById("winPage").style.visibility = "hidden";
+    winner = document.getElementById("winPage");
     const values = ["strength", "cunning", "speed", "fatigue"]
     var increase = [values.splice(parseInt(Math.random() * 4), 1), values.splice(parseInt(Math.random() * 3), 1)]
     var decrease = values;
@@ -122,15 +135,13 @@ function initialize() {
     display()
 }
 function attack(Player) {
-    Player.setAttackValue(parseInt((Player.getStrength() + Player.getSpeed() + Player.getCunning()) / (parseInt(Math.random() * 3) + 1) * 100) / 100)
-    Player.setDefendValue(Player.getSpeed() + (parseInt(Math.random() * 5) + 1))
     if (Player === Player1) {
+        number++;
         attackOrDefend = parseInt((Math.random() * 2))
-        document.getElementById("finishingMove").style.visibility = "hidden";
         document.getElementById("attack").style.visibility = "hidden";
         document.getElementById("defend").style.visibility = "hidden";
-        if (checkFinishingMove(computer)) {
-            finishingMove
+        if (computer.getFinishMove()) {
+            finishingMove(computer)
         }
         else if (attackOrDefend === 1) {
             attack(computer);
@@ -139,28 +150,24 @@ function attack(Player) {
             defend(computer)
         }
     }
-    if (Player === Player1) {
-        playerEvents.innerHTML += "<br />Your attack value is: " + Player.getAttackValue() + "<br />Your defend value is: " + Player.getDefendValue() + "<br />";
-    }
-    else {
-        computerEvents.innerHTML += "<br />Your attack value is: " + Player.getAttackValue() + "<br />Your defend value is: " + Player.getDefendValue() + "<br />";
-    }
-    calculateResult();
+    Player.setAttackValue(parseInt((Player.getStrength() + Player.getSpeed() + Player.getCunning()) / (parseInt(Math.random() * 3) + 1) * 100) / 100)
+    console.log(Player.getAttackValue())
+    Player.setDefendValue(Player.getSpeed() + (parseInt(Math.random() * 6) + 1))
+    console.log(Player.getDefendValue())
+    setTimeout(reappear, 500)
+    calculateResult(Player);
     display();
 }
 
 
 function defend(Player) {
-    Player.setDefendValue(Player.getCunning() + Player.getSpeed());
-    Player.setAttackValue(0);
     if (Player === Player1) {
+        number++;
         attackOrDefend = parseInt((Math.random() * 2))
-        document.getElementById("finishingMove").style.visibility = "hidden";
         document.getElementById("attack").style.visibility = "hidden";
         document.getElementById("defend").style.visibility = "hidden";
-        console.log(checkFinishingMove(computer))
-        if (checkFinishingMove(computer)) {
-            finishingMove
+        if (computer.getFinishMove()) {
+            finishingMove(computer);
         }
         else if (attackOrDefend === 1) {
             attack(computer);
@@ -169,99 +176,118 @@ function defend(Player) {
             defend(computer)
         }
     }
-    if (Player === Player1) {
-        playerEvents.innerHTML += "<br />Your attack value is: " + Player.getAttackValue() + "<br />Your defend value is: " + Player.getDefendValue() + "<br />";
-    }
-    else {
-        computerEvents.innerHTML += "<br />Your attack value is: " + Player.getAttackValue() + "<br />Your defend value is: " + Player.getDefendValue() + "<br />";
-    }
-    calculateResult();
+    Player.setDefendValue(Player.getCunning() + Player.getSpeed());
+    Player.setAttackValue(0);
+    setTimeout(reappear, 750)
+    calculateResult(Player)
     display();
 }
 
 function finishingMove(Player) {
+    Player.changeAttemptFinishMove(true);
+    document.getElementById("attack").style.visibility = "hidden";
+    document.getElementById("defend").style.visibility = "hidden";
+    document.getElementById("finishingMove").style.visibility = "hidden";
     if (Player === Player1) {
         opponent = computer;
+        number++;
     }
     else {
         opponent = Player1;
     }
-    Player.setAttackValue(parseInt((Player.getStrength() + Player.getSpeed()) / (parseInt(Math.random() * 3) + 1) * 100) / 100)
-    calculateResult();
-    display()
-    if (finishingMove > 1) {
-        Player.changeWin();
+    Player.setAttackValue(parseInt(((Player.getStrength() + Player.getSpeed()) / (parseInt(Math.random() * 3) + 1) * 100)) / 100)
+    if (Player.getAttackValue() - opponent.getDefendValue() > 1) {
+        if (Player === Player1) {
+            winner.innerHTML += " Win";
+            displays = document.getElementsByClassName("display")
+            for (element of displays) {
+                element.style.display = "none";
+            }
+            document.getElementsByTagName("body")[0].style.backgroundColor = "white";
+            document.getElementById("winPage").style.visibility = "visible"
+            document.getElementById("winPage").style.fontSize = "300px"
+            return true;
+        }
+        else if (Player === computer) {
+            winner.innerHTML += " Lose";
+            displays = document.getElementsByClassName("display")
+            for (element of displays) {
+                element.style.display = "none";
+            }
+            document.getElementsByTagName("body")[0].style.backgroundColor = "white";
+            document.getElementById("winPage").style.visibility = "visible"
+            document.getElementById("winPage").style.fontSize = "300px"
+            return true;
+        }
     }
+    setTimeout(reappear, 750)
+    calculateResult(Player);
+    display()
 }
 function calculateResult(Player) {
-    number++;
+    if (Player === Player1) {
+        opponent = computer;
+        playerEvents.innerHTML += "<br />Round " + number + " result:<br />"
+        playerEvents.innerHTML += "<br />Your attack value is: " + Player.getAttackValue() + "<br />Your defend value is: " + Player.getDefendValue() + "<br />";
+        computerEvents.innerHTML += "<br />Round " + number + " result:<br />"
+        computerEvents.innerHTML += "<br />Your attack value is: " + opponent.getAttackValue() + "<br />Your defend value is: " + opponent.getDefendValue() + "<br />";
+    }
+    else {
+        opponent = Player1
+    }
+    if (Player.getAttemptFinishMove()) {
+        if (Player === Player1) {
+            playerEvents.innerHTML += "<br />You have attempted a finishing move but it was blocked by your opponent<br />"
+        }
+        else {
+            computerEvents.innerHTML += "<br />You have attempted a finishing move but it was blocked by your opponent<br />"
+        }
+    }
     if (Player === Player1) {
         opponent = computer;
         playerFatigue = ogPlayerFatigue;
         opponentFatigue = ogComputerFatigue;
-    }
-    else {
-        opponent = Player1;
-        playerFatigue = ogComputerFatigue;
-        opponentFatigue = ogPlayerFatigue;
-    }
-    if (Player.getAttackValue() > opponent.getDefendValue()) {
-        opponent.subtractFatigue(Player.getAttackValue() - opponent.getDefendValue())
-        if (Player === Player1) {
-            playerEvents.innerHTML += "<br />You have successfully reduced your opponent's fatigue by " + (Player.getAttackValue() - opponent.getDefendValue()) + "<br />"
+        if (Player.getAttackValue() > opponent.getDefendValue()) {
+            opponent.subtractFatigue(Player.getAttackValue() - opponent.getDefendValue())
+            playerEvents.innerHTML += "<br />You have reduced your opponent's fatigue by " + parseInt((Player.getAttackValue() - opponent.getDefendValue()) * 100) / 100 + "<br />"
+            computerEvents.innerHTML += "<br />Your fatigue is reduced by " + parseInt((Player.getAttackValue() - opponent.getDefendValue()) * 100) / 100 + "<br />"
+            console.log(parseInt((Player.getAttackValue() - opponent.getDefendValue()) * 100) / 100)
         }
-        else {
-            computerEvents.innerHTML += "<br />You have successfully reduced your opponent's fatigue by " + (Player.getAttackValue() - opponent.getDefendValue()) + "<br />"
+        if (opponent.getAttackValue() > Player.getDefendValue()) {
+            Player.subtractFatigue(opponent.getAttackValue() - Player.getDefendValue())
+            computerEvents.innerHTML += "<br />You have reduced your opponent's fatigue by " + parseInt((opponent.getAttackValue() - Player.getDefendValue()) * 100) / 100 + "<br />"
+            playerEvents.innerHTML += "<br />Your fatigue is reduced by " + parseInt((opponent.getAttackValue() - Player.getDefendValue()) * 100) / 100 + "<br />"
+            console.log(parseInt((opponent.getAttackValue() - Player.getDefendValue()) * 100) / 100)
         }
-    }
-    else if (opponent.getAttackValue() > Player.getDefendValue()) {
-        Player.subtractFatigue(opponent.getAttackValue() - Player.getDefendValue())
-        if (opponent === Player1) {
-            playerEvents.innerHTML += "<br />You have successfully reduced your opponent's fatigue by " + (opponent.getAttackValue() - Player.getDefendValue()) + "<br />"
-        }
-        else {
-            computerEvents.innerHTML += "<br />You have successfully reduced your opponent's fatigue by " + (opponent.getAttackValue() - Player.getDefendValue()) + "<br />"
-        }
-    }
-    else if (Player.getDefendValue() > opponent.getAttackValue()) {
-        random = parseInt(Math.random() * 5) + 1
-        if (Player.getFatigue() + 6 >= playerFatigue) {
-            random = parseInt(Math.random() * (playerFatigue - Player.getFatigue() + 1))
-            Player.addFatigue(random)
-        }
-        else {
-            Player.addFatigue(random)
-        }
-        if (Player === Player1) {
+        if (Player.getDefendValue() > opponent.getAttackValue() && opponent.getAttackValue() > 0) {
+            var random = parseInt(Math.random() * 6) + 1
+            if (Player.getFatigue() + 6 > playerFatigue) {
+                random = parseInt(Math.random() * (playerFatigue - Player.getFatigue() + 1))
+                Player.addFatigue(random)
+            }
+            else {
+                Player.addFatigue(random)
+            }
             playerEvents.innerHTML += "<br />You have successfully blocked an attack and " + random + " fatigue is added<br />"
-            computerEvents.innerHTML += "<br /Your attacked was blocked by your opponent><br />"
+            computerEvents.innerHTML += "<br />Your attack was blocked by your opponent<br />"
         }
-        else {
+        if (opponent.getDefendValue() > Player.getAttackValue() && Player.getAttackValue() > 0) {
+            var random = parseInt(Math.random() * 6) + 1
+            if (opponent.getFatigue() + 6 > opponentFatigue) {
+                random = parseInt(Math.random() * (opponentFatigue - opponent.getFatigue() + 1))
+                opponent.addFatigue(random)
+            }
+            else {
+                opponent.addFatigue(random)
+            }
             computerEvents.innerHTML += "<br />You have successfully blocked an attack and " + random + " fatigue is added<br />"
-            playerEvents.innerHTML += "<br /Your attacked was blocked by your opponent><br />"
+            playerEvents.innerHTML += "<br />Your attack was blocked by your opponent<br />"
         }
+        computerEvents.innerHTML += "---------------------------------"
+        playerEvents.innerHTML += "---------------------------------"
     }
-    else if (opponent.getDefendValue() > Player.getAttackValue()) {
-        random = parseInt(Math.random() * 5) + 1
-        if (opponent.getFatigue() + 6 >= playerFatigue) {
-            random = parseInt(Math.random() * (playerFatigue - Player.getFatigue() + 1))
-            opponent.addFatigue(random)
-        }
-        else {
-            opponent.addFatigue(random)
-        }
-        if (opponent === Player1) {
-            playerEvents.innerHTML += "<br />You have successfully blocked an attack and " + random + " fatigue is added<br />"
-            computerEvents.innerHTML += "<br /Your attacked was blocked by your opponent><br />"
-        }
-        else {
-            computerEvents.innerHTML += "<br />You have successfully blocked an attack and " + random + " fatigue is added<br />"
-            playerEvents.innerHTML += "<br /Your attacked was blocked by your opponent><br />"
-        }
-    }
-    document.getElementById("finishingMove").style.visibility = "visible";
-    document.getElementById("attack").style.visibility = "visible";
-    document.getElementById("defend").style.visibility = "visible";
+    computerEvents.scrollTop = computerEvents.scrollHeight;
+    playerEvents.scrollTop = playerEvents.scrollHeight;
     checkFinishingMove(Player);
 }
 function display() {
@@ -290,17 +316,28 @@ function checkFinishingMove(Player) {
     else {
         opponent = Player1;
     }
-    if (opponent.getFatigue() * 2 < Player.getFatigue() || opponent.getFatigue() < 0) {
+    if (Player.getFatigue() > (opponent.getFatigue() * 2) || opponent.getFatigue() < 0) {
         if (Player === Player1) {
-            document.getElementById("finishingMove").style.visibility = "visible";
+            Player1.setFinishingMove(true);
         }
         else {
-            return true;
+            computer.setFinishingMove(true);
         }
-        finishingMove(Player);
     }
     else {
         document.getElementById("finishingMove").style.visibility = "hidden";
-        return false;
+        Player.setFinishingMove(false);
+    }
+    Player.changeAttemptFinishMove(false);
+}
+
+function reappear() {
+    document.getElementById("attack").style.visibility = "visible";
+    document.getElementById("defend").style.visibility = "visible";
+    if (Player1.getFinishMove()) {
+        document.getElementById("finishingMove").style.visibility = "visible";
+    }
+    else {
+        document.getElementById("finishingMove").style.visibility = "hidden";
     }
 }

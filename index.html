@@ -10,30 +10,51 @@
 </head>
 
 <body onload="initialize();">
-    <p>Round <span id = "round#"></span></p>
-    <div class="player">
-        <div><u>Player Log</u></div>
-        <div><u>Player Stat's</u>
-        <p>Original Strength: <span id = "originalPlayerStrength"></span></p> 
-        <p>Original Cunning: <span id = "originalPlayerCunning"></span></p> 
-        <p>Original Speed: <span id = "originalPlayerSpeed"></span></p> 
-        <p>Original Fatigue: <span id = "originalPlayerFatigue"></span></p> 
+    <div class="display">
+        <h2>Round <span id="round#"></span></h2>
+        <div class="playerInfo">
+            <div class="player">
+                <div id="playerLog"><u>Player Log</u></div>
+                <div><u>Player Stat's</u>
+                    <p>Original Strength: <span id="originalPlayerStrength"></span></p>
+                    <p>Original Cunning: <span id="originalPlayerCunning"></span></p>
+                    <p>Original Speed: <span id="originalPlayerSpeed"></span></p>
+                    <p>Original Fatigue: <span id="originalPlayerFatigue"></span></p><br>
+                    <p>Current Strength: <span id="currentPlayerStrength"></span></p>
+                    <p>Current Cunning: <span id="currentPlayerCunning"></span></p>
+                    <p>Current Speed: <span id="currentPlayerSpeed"></span></p>
+                    <p>Current Fatigue: <span id="currentPlayerFatigue"></span></p>
+                </div>
+            </div>
+            <div id = "playerImage">
+                <img src="Player1.png">
+            </div>
         </div>
-    </div>
-    <div class="computer">
-        <div><u>Computer Log</u></div>
-        <div><u>Computer Stat's</u>
-            <p>Original Strength: <span id = "originalComputerStrength"></span></p> 
-            <p>Original Cunning: <span id = "originalComputerCunning"></span></p> 
-            <p>Original Speed: <span id = "originalComputerSpeed"></span></p> 
-            <p>Original Fatigue: <span id = "originalComputerFatigue"></span></p> 
+        <div class="computerInfo">
+            <div class="computer">
+                <div id="computerLog"><u>Computer Log</u></div>
+                <div><u>Computer Stat's</u>
+                    <p>Original Strength: <span id="originalComputerStrength"></span></p>
+                    <p>Original Cunning: <span id="originalComputerCunning"></span></p>
+                    <p>Original Speed: <span id="originalComputerSpeed"></span></p>
+                    <p>Original Fatigue: <span id="originalComputerFatigue"></span></p><br>
+                    <p>Current Strength: <span id="currentComputerStrength"></span></p>
+                    <p>Current Cunning: <span id="currentComputerCunning"></span></p>
+                    <p>Current Speed: <span id="currentComputerSpeed"></span></p>
+                    <p>Current Fatigue: <span id="currentComputerFatigue"></span></p>
+                </div>
+            </div>
+            <div id="computerImage">
+            <img src="computer.png">
+            </div>
         </div>
+        <span class="controls">
+            <button id="attack" onclick="attack(Player1);">Attack</button>
+            <button id="defend" onclick="defend(Player1)">Defend</button>
+            <button id="finishingMove" onclick="finishingMove(Player1)">Finishing move</button>
+        </span>
     </div>
-    <div class="controls">
-        <button onclick="attack(Player1);">Attack</button>
-        <button onclick="defend(Player1)">Defend</button>
-        <button onclick="finishingMove(Player1)">Attempt finishing move</button>
-    </div>
+    <div id="winPage">You</div>
     <script src="script.js"></script>
 </body>
 

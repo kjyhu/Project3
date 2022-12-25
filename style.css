@@ -1,36 +1,90 @@
-.computer > div{
+.computer>div {
     margin-left: 50%;
     border: solid black;
-    height: 250px;
-    width: 200px;
+    height: 370px;
+    width: 250px;
     float: right;
     background-color: white;
 }
-.player > div{
+
+.player>div {
     margin-right: 50%;
-    border:solid black;
-    height: 250px;
-    width: 200px;
+    border: solid black;
+    height: 370px;
+    width: 250px;
     float: left;
     background-color: white;
 }
+
 .player {
     width: 50%;
     float: left;
-    margin-top: 10%;
 }
-.computer{
-    margin-top: 10%;
-    width: 50%;
+
+.computer {
+    width: 30%;
     float: right;
 }
-.controls{
+
+.controls {
     width: 50%;
     align-content: center;
 }
-body{
-    background-color: rgb(54, 171, 218);
+
+body {
+    background-image: url("background image.jpg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
-div~p{
+
+h2 {
     text-align: center;
+}
+
+.player div:first-child {
+    overflow: scroll;
+}
+
+.computer div:first-child {
+    overflow: scroll;
+}
+
+button {
+    align-items: center;
+}
+
+#winPage {
+    text-align: center;
+}
+
+.controls {
+    margin-left: 25%;
+    display: inline-block;
+}
+
+button {
+    background-color: yellow;
+    width: 150px;
+    height: 50px;
+}
+.playerInfo{
+    display: inline-block;
+}
+.computerInfo{
+    display: inline-block;
+    float: right;
+}
+#computerImage img{
+    position: absolute;
+    bottom: 0;
+    right: 500;
+}
+#playerImage img{
+    position: absolute;
+    bottom: 0;
+    left: 500;
+}
+img{
 }
