@@ -133,6 +133,9 @@ function initialize() {
     ogComputerCunning = computer.getCunning();
     ogComputerSpeed = computer.getSpeed();
     display()
+    if (window.innerWidth < 1000){
+        document.getElementsByTagName("body")[0].style.display = "none";
+    }
 }
 function attack(Player) {
     if (Player === Player1) {
