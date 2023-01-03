@@ -251,13 +251,19 @@ function calculateResult(Player) {
             opponent.subtractFatigue(Player.getAttackValue() - opponent.getDefendValue())
             playerEvents.innerHTML += "<br />You have reduced your opponent's fatigue by " + parseInt((Player.getAttackValue() - opponent.getDefendValue()) * 100) / 100 + "<br />"
             computerEvents.innerHTML += "<br />Your fatigue is reduced by " + parseInt((Player.getAttackValue() - opponent.getDefendValue()) * 100) / 100 + "<br />"
-            console.log(parseInt((Player.getAttackValue() - opponent.getDefendValue()) * 100) / 100)
+            if (opponentFatigue - opponent.getFatigue() >= 5) {
+                opponent.subtractFatigue(1)
+                computerEvents.innerHTML += "<br />You lost an extra fatigue because you lost 5 or more fatigue<br />"
+            }
         }
         if (opponent.getAttackValue() > Player.getDefendValue()) {
             Player.subtractFatigue(opponent.getAttackValue() - Player.getDefendValue())
             computerEvents.innerHTML += "<br />You have reduced your opponent's fatigue by " + parseInt((opponent.getAttackValue() - Player.getDefendValue()) * 100) / 100 + "<br />"
             playerEvents.innerHTML += "<br />Your fatigue is reduced by " + parseInt((opponent.getAttackValue() - Player.getDefendValue()) * 100) / 100 + "<br />"
-            console.log(parseInt((opponent.getAttackValue() - Player.getDefendValue()) * 100) / 100)
+            if (playerFatigue - Player.getFatigue() >= 5) {
+                Player.subtractFatigue(1)
+                playerEvents.innerHTML += "<br />You lost an extra fatigue because you lost 5 or more fatigue<br />"
+            }
         }
         if (Player.getDefendValue() > opponent.getAttackValue() && opponent.getAttackValue() > 0) {
             var random = parseInt(Math.random() * 6) + 1
@@ -270,6 +276,10 @@ function calculateResult(Player) {
             }
             playerEvents.innerHTML += "<br />You have successfully blocked an attack and " + random + " fatigue is added<br />"
             computerEvents.innerHTML += "<br />Your attack was blocked by your opponent<br />"
+            if (random > 5) {
+                Player.addFatigue(1)
+                playerEvents.innerHTML += "<br />You gained an extra fatigue because you regain 5 or more fatigue<br />"
+            }
         }
         if (opponent.getDefendValue() > Player.getAttackValue() && Player.getAttackValue() > 0) {
             var random = parseInt(Math.random() * 6) + 1
@@ -282,6 +292,10 @@ function calculateResult(Player) {
             }
             computerEvents.innerHTML += "<br />You have successfully blocked an attack and " + random + " fatigue is added<br />"
             playerEvents.innerHTML += "<br />Your attack was blocked by your opponent<br />"
+            if (random > 5) {
+                opponent.addFatigue(1)
+                computerEvents.innerHTML += "<br />You gained an extra fatigue because you regain 5 or more fatigue<br />"
+            }
         }
         computerEvents.innerHTML += "---------------------------------"
         playerEvents.innerHTML += "---------------------------------"
