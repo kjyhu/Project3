@@ -83,11 +83,11 @@ button {
 }
 #computerImage img{
     position: absolute;
-    bottom: 0;
+    bottom: 100;
     right: 500;
 }
 #playerImage img{
     position: absolute;
-    bottom: 0;
+    bottom: 100;
     left: 500;
 }
